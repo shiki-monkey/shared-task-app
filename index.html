@@ -16,26 +16,26 @@
             --dark: #212529;
             --gray: #6c757d;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
             background-color: #f5f7ff;
             color: var(--dark);
             line-height: 1.6;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
-        
+
         header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
@@ -44,12 +44,12 @@
             margin-bottom: 2rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        
+
         h1 {
             text-align: center;
             margin-bottom: 1rem;
         }
-        
+
         .auth-container, .app-container {
             background: white;
             border-radius: 10px;
@@ -57,21 +57,21 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin-bottom: 2rem;
         }
-        
+
         .app-container {
             display: none;
         }
-        
+
         .form-group {
             margin-bottom: 1.5rem;
         }
-        
+
         label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 600;
         }
-        
+
         input, select, button, textarea {
             width: 100%;
             padding: 12px;
@@ -79,7 +79,7 @@
             border-radius: 5px;
             font-size: 1rem;
         }
-        
+
         button {
             background-color: var(--primary);
             color: white;
@@ -88,18 +88,18 @@
             font-weight: 600;
             transition: background-color 0.3s;
         }
-        
+
         button:hover {
             background-color: var(--secondary);
         }
-        
+
         .task-list {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1.5rem;
             margin-top: 1.5rem;
         }
-        
+
         .task-card {
             background: white;
             border-radius: 10px;
@@ -108,50 +108,50 @@
             border-left: 5px solid var(--primary);
             position: relative;
         }
-        
+
         .task-card.completed {
             border-left: 5px solid var(--success);
             opacity: 0.8;
         }
-        
+
         .task-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
         }
-        
+
         .task-title {
             font-weight: 700;
             font-size: 1.2rem;
         }
-        
+
         .task-time {
             color: var(--gray);
             font-size: 0.9rem;
         }
-        
+
         .task-description {
             margin-bottom: 1rem;
             color: var(--gray);
         }
-        
+
         .task-completion {
             display: flex;
             align-items: center;
             margin-bottom: 1rem;
         }
-        
+
         .task-completion input {
             width: auto;
             margin-right: 10px;
         }
-        
+
         .completed-by {
             font-size: 0.9rem;
             color: var(--gray);
         }
-        
+
         .notification-area {
             position: fixed;
             bottom: 20px;
@@ -159,7 +159,7 @@
             width: 300px;
             z-index: 1000;
         }
-        
+
         .notification {
             background: white;
             border-radius: 5px;
@@ -169,11 +169,11 @@
             border-left: 5px solid var(--success);
             animation: slideIn 0.3s ease;
         }
-        
+
         .notification.error {
             border-left: 5px solid var(--warning);
         }
-        
+
         @keyframes slideIn {
             from {
                 transform: translateX(100%);
@@ -184,20 +184,20 @@
                 opacity: 1;
             }
         }
-        
+
         .user-info {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
         }
-        
+
         .logout-btn {
             width: auto;
             padding: 8px 16px;
             background-color: var(--warning);
         }
-        
+
         .day-selector {
             display: flex;
             gap: 10px;
@@ -205,7 +205,7 @@
             overflow-x: auto;
             padding-bottom: 10px;
         }
-        
+
         .day-btn {
             padding: 10px 15px;
             background-color: #e9ecef;
@@ -215,18 +215,18 @@
             cursor: pointer;
             white-space: nowrap;
         }
-        
+
         .day-btn.active {
             background-color: var(--primary);
             color: white;
         }
-        
+
         .tab-container {
             display: flex;
             margin-bottom: 1.5rem;
             border-bottom: 1px solid #ddd;
         }
-        
+
         .tab {
             padding: 10px 20px;
             cursor: pointer;
@@ -236,50 +236,50 @@
             border-radius: 5px 5px 0 0;
             margin-right: 5px;
         }
-        
+
         .tab.active {
             background: white;
             border-color: #ddd;
             font-weight: 600;
         }
-        
+
         .tab-content {
             display: none;
         }
-        
+
         .tab-content.active {
             display: block;
         }
-        
+
         .task-actions {
             display: flex;
             gap: 10px;
             margin-top: 10px;
         }
-        
+
         .task-actions button {
             width: auto;
         }
-        
+
         .delete-task {
             background-color: var(--warning);
         }
-        
+
         .loading {
             text-align: center;
             padding: 2rem;
             color: var(--gray);
         }
-        
+
         @media (max-width: 768px) {
             .task-list {
                 grid-template-columns: 1fr;
             }
-            
+
             .notification-area {
                 width: 250px;
             }
-            
+
             .tab-container {
                 overflow-x: auto;
             }
@@ -292,11 +292,11 @@
             margin: 20px 0;
             border-radius: 4px;
         }
-        
+
         .setup-steps {
             margin-left: 20px;
         }
-        
+
         .setup-steps li {
             margin-bottom: 10px;
         }
@@ -308,7 +308,7 @@
             <h1>Shared Task Reminder</h1>
             <p>Collaborate on daily tasks and get reminders</p>
         </header>
-        
+
         <div class="auth-container" id="authContainer">
             <h2>Login / Register</h2>
             <div class="form-group">
@@ -324,21 +324,21 @@
                 Don't have an account? <a href="#" id="showRegister">Register</a>
             </p>
         </div>
-        
+
         <div class="app-container" id="appContainer">
             <div class="user-info">
                 <span>Welcome, <span id="currentUser"></span></span>
                 <button class="logout-btn" id="logoutBtn">Logout</button>
             </div>
-            
+
             <div class="tab-container">
                 <div class="tab active" data-tab="tasks">Tasks</div>
                 <div class="tab" data-tab="create">Create Task</div>
             </div>
-            
+
             <div class="tab-content active" id="tasksTab">
                 <h2>Tasks for <span id="currentDay">Monday</span></h2>
-                
+
                 <div class="day-selector">
                     <button class="day-btn active" data-day="monday">Monday</button>
                     <button class="day-btn" data-day="tuesday">Tuesday</button>
@@ -348,10 +348,43 @@
                     <button class="day-btn" data-day="saturday">Saturday</button>
                     <button class="day-btn" data-day="sunday">Sunday</button>
                 </div>
-                
+
                 <div class="task-list" id="taskList">
                     <div class="loading">Loading tasks...</div>
                 </div>
+            </div>
+            
+            <div class="tab-content" id="editTab">
+                <h2>Edit Task</h2>
+                <form id="editTaskForm">
+                    <input type="hidden" id="editTaskId">
+                    <div class="form-group">
+                        <label for="editTaskTitle">Task Title</label>
+                        <input type="text" id="editTaskTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editTaskDescription">Description</label>
+                        <textarea id="editTaskDescription"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="editTaskDay">Day</label>
+                        <select id="editTaskDay" required>
+                            <option value="monday">Monday</option>
+                            <option value="tuesday">Tuesday</option>
+                            <option value="wednesday">Wednesday</option>
+                            <option value="thursday">Thursday</option>
+                            <option value="friday">Friday</option>
+                            <option value="saturday">Saturday</option>
+                            <option value="sunday">Sunday</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editTaskTime">Time</label>
+                        <input type="time" id="editTaskTime" required>
+                    </div>
+                    <button type="submit" id="updateTaskBtn">Update Task</button>
+                    <button type="button" id="cancelEditBtn">Cancel</button>
+                </form>
             </div>
             
             <div class="tab-content" id="createTab">
@@ -395,8 +428,8 @@
     <script>
         // Supabase configuration - REPLACE WITH YOUR VALUES
         const SUPABASE_URL = 'https://dekquvkuhlsokxwhbprs.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRla3F1dmt1aGxzb2t4d2hicHJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgwNTIzOTgsImV4cCI6MjA3MzYyODM5OH0.Tyvd-F9Av3Mjat8kPvE0OVuQVRBZ2RBrUQgfBCVi9b0';
-       const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRla3F1dmt1aGxzb2t4d2hicHJzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1ODA1MjM5OCwiZXhwIjoyMDczNjI4Mzk4fQ.L68x5i_P-A49FPIe_wtJhScJ-KhfA-NMc9p1mwzTrDs';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         // DOM Elements
         const authContainer = document.getElementById('authContainer');
@@ -412,11 +445,22 @@
         const tabs = document.querySelectorAll('.tab');
         const tabContents = document.querySelectorAll('.tab-content');
         const createTaskBtn = document.getElementById('createTaskBtn');
+
+        // NEW: Edit Form Elements
+        const editTaskContainer = document.getElementById('editTaskContainer');
+        const editTaskForm = document.getElementById('editTaskForm');
+        const editTaskIdInput = document.getElementById('editTaskId');
+        const editTaskTitleInput = document.getElementById('editTaskTitle');
+        const editTaskDescriptionInput = document.getElementById('editTaskDescription');
+        const editTaskDayInput = document.getElementById('editTaskDay');
+        const editTaskTimeInput = document.getElementById('editTaskTime');
+        const updateTaskBtn = document.getElementById('updateTaskBtn');
+        const cancelEditBtn = document.getElementById('cancelEditBtn');
         
         let currentUser = null;
         let currentDay = 'monday';
         let tasks = [];
-        
+
         // Initialize the app
         async function init() {
             // Check for a logged-in user
@@ -428,51 +472,71 @@
                 authContainer.style.display = 'block';
                 appContainer.style.display = 'none';
             }
-            
+
             // Set up event listeners
             loginBtn.addEventListener('click', handleLogin);
             showRegister.addEventListener('click', handleRegister);
             logoutBtn.addEventListener('click', handleLogout);
             createTaskBtn.addEventListener('click', handleCreateTask);
             
+            // NEW: Edit and Delete listeners
+            taskList.addEventListener('click', (event) => {
+                if (event.target.classList.contains('edit-task')) {
+                    const taskId = event.target.dataset.id;
+                    handleEditTask(taskId);
+                } else if (event.target.classList.contains('delete-task')) {
+                    const taskId = event.target.dataset.id;
+                    deleteTask(taskId);
+                }
+            });
+            
+            // NEW: Update and Cancel listeners for the edit form
+            editTaskForm.addEventListener('submit', handleUpdateTask);
+            cancelEditBtn.addEventListener('click', () => {
+                document.getElementById('editTab').classList.remove('active');
+                document.getElementById('tasksTab').classList.add('active');
+                tabs[0].classList.add('active'); // Activate the Tasks tab
+                tabs[1].classList.remove('active'); // Deactivate Create Task tab
+            });
+            
             dayButtons.forEach(btn => {
                 btn.addEventListener('click', () => {
                     currentDay = btn.dataset.day;
                     currentDaySpan.textContent = capitalizeFirstLetter(currentDay);
-                    
+
                     // Update active button
                     dayButtons.forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
-                    
+
                     fetchAndRenderTasks();
                 });
             });
-            
+
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
                     const tabId = tab.dataset.tab;
-                    
+
                     // Update active tab
                     tabs.forEach(t => t.classList.remove('active'));
                     tab.classList.add('active');
-                    
+
                     // Show corresponding content
                     tabContents.forEach(content => content.classList.remove('active'));
                     document.getElementById(`${tabId}Tab`).classList.add('active');
                 });
             });
-            
+
             // Check for reminders every minute
             setInterval(checkReminders, 60000);
         }
-        
+
         // Authentication functions
         async function handleLogin() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            
+
             const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-            
+
             if (error) {
                 showNotification(error.message, 'error');
             } else {
@@ -481,13 +545,13 @@
                 showApp();
             }
         }
-        
+
         async function handleRegister() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            
+
             const { data, error } = await supabase.auth.signUp({ email, password });
-            
+
             if (error) {
                 showNotification(error.message, 'error');
             } else {
@@ -496,10 +560,10 @@
                 // You may want to show the login screen again here
             }
         }
-        
+
         async function handleLogout() {
             const { error } = await supabase.auth.signOut();
-            
+
             if (error) {
                 showNotification('Error logging out: ' + error.message, 'error');
             } else {
@@ -507,26 +571,26 @@
                 window.location.reload(); // Reloads the page to show the login screen
             }
         }
-        
+
         function showApp() {
             authContainer.style.display = 'none';
             appContainer.style.display = 'block';
             currentUserSpan.textContent = currentUser.email;
             fetchAndRenderTasks();
         }
-        
+
         // Task creation
         async function handleCreateTask() {
             const title = document.getElementById('taskTitle').value;
             const description = document.getElementById('taskDescription').value;
             const day = document.getElementById('taskDay').value;
             const time = document.getElementById('taskTime').value;
-            
+
             if (!title || !time) {
                 showNotification('Please fill in all required fields', 'error');
                 return;
             }
-            
+
             const { data, error } = await supabase
                 .from('tasks')
                 .insert([{
@@ -535,21 +599,21 @@
                     day: day,
                     time: time,
                     is_completed: false,
-                    user_id: currentUser.id, // We'll link the task to the user
+                    user_id: currentUser.id,
                     user_email: currentUser.email
                 }]);
-            
+
             if (error) {
                 showNotification('Error creating task: ' + error.message, 'error');
             } else {
                 document.getElementById('taskTitle').value = '';
                 document.getElementById('taskDescription').value = '';
                 document.getElementById('taskTime').value = '';
-                
+
                 showNotification('Task created successfully!', 'success');
             }
         }
-        
+
         // Task completion
         async function toggleTaskCompletion(taskId, completed) {
             const { data, error } = await supabase
@@ -560,7 +624,7 @@
                     completed_at: completed ? new Date().toISOString() : null
                 })
                 .eq('id', taskId);
-                
+
             if (error) {
                 showNotification('Error updating task: ' + error.message, 'error');
             } else {
@@ -570,7 +634,64 @@
                 }
             }
         }
-        
+
+        // NEW: Task Editing
+        async function handleEditTask(taskId) {
+            const { data: task, error } = await supabase
+                .from('tasks')
+                .select('*')
+                .eq('id', taskId)
+                .single();
+            
+            if (error) {
+                showNotification('Error fetching task for editing: ' + error.message, 'error');
+                return;
+            }
+            
+            // Show the edit form and populate it with the task's data
+            document.getElementById('editTab').classList.add('active');
+            document.getElementById('tasksTab').classList.remove('active');
+            
+            // Update active tab for visual feedback
+            document.querySelector('.tab[data-tab="tasks"]').classList.remove('active');
+            
+            // Populate the form fields
+            editTaskIdInput.value = task.id;
+            editTaskTitleInput.value = task.title;
+            editTaskDescriptionInput.value = task.description;
+            editTaskDayInput.value = task.day;
+            editTaskTimeInput.value = task.time;
+        }
+
+        // NEW: Task Update
+        async function handleUpdateTask(event) {
+            event.preventDefault();
+            const taskId = editTaskIdInput.value;
+            
+            const updatedTask = {
+                title: editTaskTitleInput.value,
+                description: editTaskDescriptionInput.value,
+                day: editTaskDayInput.value,
+                time: editTaskTimeInput.value,
+            };
+            
+            const { error } = await supabase
+                .from('tasks')
+                .update(updatedTask)
+                .eq('id', taskId);
+                
+            if (error) {
+                showNotification('Error updating task: ' + error.message, 'error');
+            } else {
+                showNotification('Task updated successfully!', 'success');
+                // Hide the edit form and show the tasks list again
+                document.getElementById('editTab').classList.remove('active');
+                document.getElementById('tasksTab').classList.add('active');
+                document.querySelector('.tab[data-tab="tasks"]').classList.add('active');
+                fetchAndRenderTasks(); // Re-render tasks to show the change
+            }
+        }
+
         // Task deletion
         async function deleteTask(taskId) {
             if (confirm('Are you sure you want to delete this task?')) {
@@ -586,22 +707,22 @@
                 }
             }
         }
-        
+
         // Task rendering
         function renderTasks() {
             const dayTasks = tasks.filter(task => task.day === currentDay);
-            
+
             if (dayTasks.length === 0) {
                 taskList.innerHTML = '<p>No tasks for this day.</p>';
                 return;
             }
-            
+
             taskList.innerHTML = '';
-            
+
             dayTasks.forEach(task => {
                 const taskCard = document.createElement('div');
                 taskCard.className = `task-card ${task.is_completed ? 'completed' : ''}`;
-                
+
                 taskCard.innerHTML = `
                     <div class="task-header">
                         <div class="task-title">${task.title}</div>
@@ -618,35 +739,34 @@
                         </div>
                     ` : ''}
                     <div class="task-actions">
+                        <button class="edit-task" data-id="${task.id}">Edit Task</button>
                         <button class="delete-task" data-id="${task.id}">Delete Task</button>
                     </div>
                 `;
                 
+                // Add event listener for the checkbox
                 const checkbox = taskCard.querySelector(`#task-${task.id}`);
                 checkbox.addEventListener('change', () => {
                     toggleTaskCompletion(task.id, checkbox.checked);
                 });
-                
-                const deleteBtn = taskCard.querySelector('.delete-task');
-                deleteBtn.addEventListener('click', () => {
-                    deleteTask(task.id);
-                });
-                
+
                 taskList.appendChild(taskCard);
             });
         }
         
         // Fetch tasks with real-time updates
         async function fetchAndRenderTasks() {
+            // Unsubscribe from any previous channels to avoid duplicate listeners
+            supabase.removeAllChannels();
+
             // Subscribe to real-time changes
             supabase
                 .channel('realtime_tasks')
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, payload => {
-                    // This function runs whenever there's a change in the 'tasks' table
                     fetchTasks(); // Re-fetch all tasks to update the UI
                 })
                 .subscribe();
-            
+
             // Initial fetch
             fetchTasks();
         }
@@ -664,55 +784,55 @@
                 renderTasks();
             }
         }
-        
+
         // Reminder system
         function checkReminders() {
             const now = new Date();
             const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
             const day = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][now.getDay()];
-            
+
             tasks.forEach(task => {
                 if (task.day === day && task.time === currentTime && !task.is_completed) {
                     showNotification(`Reminder: It's time to ${task.title}`, 'success');
                 }
             });
         }
-        
+
         // Helper functions
         function showNotification(message, type = 'success') {
             const notification = document.createElement('div');
             notification.className = `notification ${type === 'error' ? 'error' : ''}`;
             notification.textContent = message;
-            
+
             notificationArea.appendChild(notification);
-            
+
             setTimeout(() => {
                 notification.remove();
             }, 5000);
         }
-        
+
         function formatTime(timeStr) {
             if (!timeStr) return '';
-            
+
             const [hours, minutes] = timeStr.split(':');
             const hour = parseInt(hours);
             const ampm = hour >= 12 ? 'PM' : 'AM';
             const formattedHour = hour % 12 || 12;
-            
+
             return `${formattedHour}:${minutes.padStart(2, '0')} ${ampm}`;
         }
-        
+
         function formatDateTime(timestamp) {
             if (!timestamp) return '';
-            
+
             const date = new Date(timestamp);
             return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         }
-        
+
         function capitalizeFirstLetter(string) {
             return string.charAt(0).toUpperCase() + string.slice(1);
         }
-        
+
         // Initialize the app
         init();
     </script>
