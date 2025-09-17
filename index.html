@@ -616,26 +616,28 @@
             }
         }
 
-        // Task completion
-        async function toggleTaskCompletion(taskId, completed) {
-            const { data, error } = await supabase
-                .from('tasks')
-                .update({
-                    is_completed: completed,
-                    completed_by: completed ? currentUser.email : null,
-                    completed_at: completed ? new Date().toISOString() : null
-                })
-                .eq('id', taskId);
+       // Task completion
+async function toggleTaskCompletion(taskId, completed) {
+    const { data, error } = await supabase
+        .from('tasks')
+        .update({
+            is_completed: completed,
+            completed_by: completed ? currentUser.email : null,
+            completed_at: completed ? new Date().toISOString() : null
+        })
+        .eq('id', taskId);
 
-            if (error) {
-                showNotification('Error updating task: ' + error.message, 'error');
-            } else {
-                const task = tasks.find(t => t.id === taskId);
-                if (task) {
-                    showNotification(`Task completed: ${task.title} by ${currentUser.email}`, 'success');
-                }
-            }
+    if (error) {
+        showNotification('Error updating task: ' + error.message, 'error');
+    } else {
+        const task = tasks.find(t => t.id === taskId);
+        if (task) {
+            showNotification(`Task completed: ${task.title} by ${currentUser.email}`, 'success');
+            // Re-render tasks to reflect the change immediately
+            fetchTasks();
         }
+    }
+}
 
         // NEW: Task Editing
         async function handleEditTask(taskId) {
@@ -840,3 +842,4 @@
     </script>
 </body>
 </html>
+
