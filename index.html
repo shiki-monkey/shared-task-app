@@ -432,6 +432,21 @@
         const SUPABASE_URL = 'https://dekquvkuhlsokxwhbprs.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRla3F1dmt1aGxzb2t4d2hicHJzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1ODA1MjM5OCwiZXhwIjoyMDczNjI4Mzk4fQ.L68x5i_P-A49FPIe_wtJhScJ-KhfA-NMc9p1mwzTrDs';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD2b4iCP9YuVYqKEgfmIGbv8VRHdzNwfU4",
+            authDomain: "sharedtaskapp-f247e.firebaseapp.com",
+            databaseURL: "https://sharedtaskapp-f247e-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "sharedtaskapp-f247e",
+            storageBucket: "sharedtaskapp-f247e.firebasestorage.app",
+            messagingSenderId: "912907618302",
+            appId: "1:912907618302:web:2d8fda8f7cc89c2e4f22af",
+            measurementId: "G-Z89ZKESPBG"
+        };
+
+        // Your VAPID key
+        const vapidKey = "BHdkIFWbArH408wXGBeB65u3UfbwJw-V2Ol6Por7nq_cV-B-tPehfACaklJeERwJLRL5JQ6yR-7UExH_pgL3DZQ";
 
         // DOM Elements
         const authContainer = document.getElementById('authContainer');
@@ -463,6 +478,54 @@
         let currentDay = 'monday';
         let tasks = [];
 
+                // Firebase-specific functions and initialization
+        const { initializeApp } = window.firebase;
+        const { getMessaging, getToken, onMessage } = window.firebase.messaging;
+
+        const app = initializeApp(firebaseConfig);
+        const messaging = getMessaging(app);
+
+        // This function will get the token and save it to the database
+        const saveTokenToDatabase = async () => {
+          try {
+            const permission = await Notification.requestPermission();
+            if (permission === "granted") {
+              const token = await getToken(messaging, { vapidKey });
+              console.log("FCM Token:", token);
+
+              const { data: { user } } = await supabase.auth.getUser();
+              if (!user) {
+                console.error("User is not logged in.");
+                return;
+              }
+
+              // Upsert (insert or update) the token to the 'push_tokens' table
+              const { error } = await supabase.from("push_tokens").upsert({
+                user_id: user.id,
+                token: token,
+              });
+
+              if (error) {
+                console.error("Error saving token:", error);
+              } else {
+                console.log("Token saved successfully.");
+              }
+            } else {
+              console.warn("Notification permission denied.");
+            }
+          } catch (error) {
+            console.error("Error getting FCM token:", error);
+          }
+        };
+
+        // Listen for messages while the app is in the foreground
+        onMessage(messaging, (payload) => {
+          console.log("Foreground message received:", payload);
+          const { title, body } = payload.notification;
+          showNotification(title + ': ' + body, 'success');
+        });
+
+        
         // Initialize the app
         async function init() {
             // Check for a logged-in user
@@ -840,3 +903,4 @@
     </script>
 </body>
 </html>
+
