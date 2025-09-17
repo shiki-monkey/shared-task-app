@@ -420,7 +420,7 @@
                     <input type="time" id="taskTime">
                 </div>
                 
-               <button id="createTaskBtn">Create Task</button>
+                <button id="createTaskBtn">Create Task</button>
             </div>
         </div>
     </div>
@@ -780,67 +780,18 @@ async function fetchAndRenderTasks() {
 }
 
         async function fetchTasks() {
-    // Get the current date and day of the week (0 = Sunday, 1 = Monday)
-    const today = new Date();
-    const dayOfWeek = today.getDay();
+            const { data, error } = await supabase
+                .from('tasks')
+                .select('*');
 
-    // Get the last reset date from local storage
-    const lastResetDate = localStorage.getItem('lastResetDate');
-    const todayStr = today.toISOString().split('T')[0];
-
-    // This block runs only on Monday and if the reset hasn't been done for today
-    if (dayOfWeek === 1 && lastResetDate !== todayStr) { 
-        // 1. Reset completed repeating tasks
-        const { data: resetData, error: resetError } = await supabase
-            .from('tasks')
-            .update({
-                is_completed: false,
-                completed_by: null,
-                completed_at: null
-            })
-            .eq('is_repeating', true)
-            .eq('is_completed', true);
-
-        if (resetError) {
-            console.error('Error resetting repeating tasks:', resetError.message);
+            if (error) {
+                console.error('Error fetching tasks:', error.message);
+                showNotification('Error fetching tasks.', 'error');
+            } else {
+                tasks = data;
+                renderTasks();
+            }
         }
-
-        // 2. Delete old one-off tasks
-        const { error: deleteError } = await supabase
-            .from('tasks')
-            .delete()
-            .eq('is_repeating', false)
-            .eq('is_completed', true);
-
-        if (deleteError) {
-            console.error('Error deleting one-off tasks:', deleteError.message);
-        }
-
-        // Store the date of this reset to prevent it from running again today
-        localStorage.setItem('lastResetDate', todayStr);
-    }
-
-    // Now, fetch and render all tasks
-    const { data, error } = await supabase
-        .from('tasks')
-        .select(`
-            id,
-            title,
-            is_completed,
-            is_repeating,
-            created_at,
-            completed_at,
-            completed_by
-        `)
-        .order('created_at', { ascending: true });
-
-    if (error) {
-        showNotification('Error fetching tasks: ' + error.message, 'error');
-    } else {
-        tasks = data;
-        renderTasks();
-    }
-}
 
         // Reminder system
         function checkReminders() {
@@ -895,8 +846,6 @@ async function fetchAndRenderTasks() {
     </script>
 </body>
 </html>
-
-
 
 
 
