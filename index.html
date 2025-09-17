@@ -616,7 +616,7 @@
             }
         }
 
-       // Task completion
+      // Task completion
 async function toggleTaskCompletion(taskId, completed) {
     const { data, error } = await supabase
         .from('tasks')
@@ -632,7 +632,11 @@ async function toggleTaskCompletion(taskId, completed) {
     } else {
         const task = tasks.find(t => t.id === taskId);
         if (task) {
-            showNotification(`Task completed: ${task.title} by ${currentUser.email}`, 'success');
+            if (completed) {
+                showNotification(`Task completed: ${task.title} by ${currentUser.email}`, 'success');
+            } else {
+                showNotification(`Task uncompleted: ${task.title}`, 'success');
+            }
             // Re-render tasks to reflect the change immediately
             fetchTasks();
         }
@@ -842,5 +846,6 @@ async function fetchAndRenderTasks() {
     </script>
 </body>
 </html>
+
 
 
