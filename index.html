@@ -10,7 +10,300 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <style>
-        /* Your CSS styles go here */
+         /* CSS styles from previous implementation */
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7ff;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .auth-container, .app-container {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .app-container {
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        input, select, button, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--secondary);
+        }
+
+        .task-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .task-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid var(--primary);
+            position: relative;
+        }
+
+        .task-card.completed {
+            border-left: 5px solid var(--success);
+            opacity: 0.8;
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .task-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .task-time {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .task-description {
+            margin-bottom: 1rem;
+            color: var(--gray);
+        }
+
+        .task-completion {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .task-completion input {
+            width: auto;
+            margin-right: 10px;
+        }
+
+        .completed-by {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .notification-area {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            z-index: 1000;
+        }
+
+        .notification {
+            background: white;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid var(--success);
+            animation: slideIn 0.3s ease;
+        }
+
+        .notification.error {
+            border-left: 5px solid var(--warning);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .logout-btn {
+            width: auto;
+            padding: 8px 16px;
+            background-color: var(--warning);
+        }
+
+        .day-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .day-btn {
+            padding: 10px 15px;
+            background-color: #e9ecef;
+            border: none;
+            color: var(--dark);
+            border-radius: 5px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .day-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .tab-container {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: 1px solid transparent;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+
+        .tab.active {
+            background: white;
+            border-color: #ddd;
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .task-actions button {
+            width: auto;
+        }
+
+        .delete-task {
+            background-color: var(--warning);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray);
+        }
+
+        @media (max-width: 768px) {
+            .task-list {
+                grid-template-columns: 1fr;
+            }
+
+            .notification-area {
+                width: 250px;
+            }
+
+            .tab-container {
+                overflow-x: auto;
+            }
+        }
+
+        .setup-guide {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .setup-steps {
+            margin-left: 20px;
+        }
+
+        .setup-steps li {
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -482,3 +775,4 @@
     </script>
 </body>
 </html>
+
