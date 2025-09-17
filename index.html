@@ -759,21 +759,21 @@ async function toggleTaskCompletion(taskId, completed) {
         }
         
         // Fetch tasks with real-time updates
-        async function fetchAndRenderTasks() {
-            // Unsubscribe from any previous channels to avoid duplicate listeners
-            supabase.removeAllChannels();
+async function fetchAndRenderTasks() {
+    // Unsubscribe from any previous channels to avoid duplicate listeners
+    supabase.removeAllChannels();
 
-            // Subscribe to real-time changes
-            supabase
-                .channel('realtime_tasks')
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, payload => {
-                    fetchTasks(); // Re-fetch all tasks to update the UI
-                })
-                .subscribe();
+    // Subscribe to real-time changes
+    supabase
+        .channel('public:tasks') // Use the correct channel name
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, payload => {
+            fetchTasks(); // Re-fetch all tasks to update the UI
+        })
+        .subscribe();
 
-            // Initial fetch
-            fetchTasks();
-        }
+    // Initial fetch
+    fetchTasks();
+}
 
         async function fetchTasks() {
             const { data, error } = await supabase
@@ -842,4 +842,5 @@ async function toggleTaskCompletion(taskId, completed) {
     </script>
 </body>
 </html>
+
 
