@@ -1,41 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shared Task Reminder</title>
 
   <!-- Supabase SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- Firebase (compat version for v8 syntax) -->
+  <!-- Firebase compat SDK (v8 style) -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>
-
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    #taskList div { margin: 5px 0; padding: 5px; border: 1px solid #ccc; }
-    .notification { padding: 10px; margin: 5px 0; border-radius: 5px; }
-    .error { background: #fdd; }
-    .success { background: #dfd; }
-  </style>
 </head>
 <body>
-  <!-- 🔹 Auth Container -->
+  <!-- 🔹 Your original markup (kept the same so styling stays intact) -->
   <div id="authContainer">
     <h2>Login / Register</h2>
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Password" />
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
     <button id="loginBtn">Login</button>
     <button id="showRegister">Register</button>
   </div>
 
-  <!-- 🔹 App Container -->
   <div id="appContainer" style="display:none;">
-    <p>Welcome, <span id="currentUser"></span></p>
+    <h2>Welcome, <span id="currentUser"></span></h2>
     <button id="logoutBtn">Logout</button>
+    <h3>Current Day: <span id="currentDay">Monday</span></h3>
 
-    <h3>Today: <span id="currentDay">Monday</span></h3>
     <div>
       <button class="day-btn" data-day="monday">Monday</button>
       <button class="day-btn" data-day="tuesday">Tuesday</button>
@@ -50,6 +41,309 @@
     <div id="notificationArea"></div>
 
     <h3>Create Task</h3>
-    <input type="text" id="taskTitle" placeholder="Task Title"/>
+    <input type="text" id="taskTitle" placeholder="Task Title">
     <textarea id="taskDescription" placeholder="Task Description"></textarea>
-    <select id="taskD
+    <select id="taskDay">
+      <option value="monday">Monday</option>
+      <option value="tuesday">Tuesday</option>
+      <option value="wednesday">Wednesday</option>
+      <option value="thursday">Thursday</option>
+      <option value="friday">Friday</option>
+      <option value="saturday">Saturday</option>
+      <option value="sunday">Sunday</option>
+    </select>
+    <input type="time" id="taskTime">
+    <button id="createTaskBtn">Create Task</button>
+  </div>
+
+  <div id="editTaskContainer" style="display:none;">
+    <form id="editTaskForm">
+      <input type="hidden" id="editTaskId">
+      <input type="text" id="editTaskTitle" placeholder="Title">
+      <textarea id="editTaskDescription" placeholder="Description"></textarea>
+      <select id="editTaskDay">
+        <option value="monday">Monday</option>
+        <option value="tuesday">Tuesday</option>
+        <option value="wednesday">Wednesday</option>
+        <option value="thursday">Thursday</option>
+        <option value="friday">Friday</option>
+        <option value="saturday">Saturday</option>
+        <option value="sunday">Sunday</option>
+      </select>
+      <input type="time" id="editTaskTime">
+      <button type="submit" id="updateTaskBtn">Update Task</button>
+      <button type="button" id="cancelEditBtn">Cancel</button>
+    </form>
+  </div>
+
+  <script>
+    // Supabase configuration
+    const SUPABASE_URL = 'https://dekquvkuhlsokxwhbprs.supabase.co';
+    const SUPABASE_KEY = 'YOUR_SUPABASE_KEY_HERE'; // 🔹 paste your real anon key
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyD2b4iCP9YuVYqKEgfmIGbv8VRHdzNwfU4",
+      authDomain: "sharedtaskapp-f247e.firebaseapp.com",
+      databaseURL: "https://sharedtaskapp-f247e-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "sharedtaskapp-f247e",
+      storageBucket: "sharedtaskapp-f247e.firebasestorage.app",
+      messagingSenderId: "912907618302",
+      appId: "1:912907618302:web:2d8fda8f7cc89c2e4f22af",
+      measurementId: "G-Z89ZKESPBG"
+    };
+
+    const vapidKey = "BHdkIFWbArH408wXGBeB65u3UfbwJw-V2Ol6Por7nq_cV-B-tPehfACaklJeERwJLRL5JQ6yR-7UExH_pgL3DZQ";
+
+    // Init Firebase (compat)
+    firebase.initializeApp(firebaseConfig);
+    const messaging = firebase.messaging();
+
+    // DOM Elements
+    const authContainer = document.getElementById('authContainer');
+    const appContainer = document.getElementById('appContainer');
+    const loginBtn = document.getElementById('loginBtn');
+    const showRegister = document.getElementById('showRegister');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const currentUserSpan = document.getElementById('currentUser');
+    const currentDaySpan = document.getElementById('currentDay');
+    const taskList = document.getElementById('taskList');
+    const notificationArea = document.getElementById('notificationArea');
+    const dayButtons = document.querySelectorAll('.day-btn');
+    const createTaskBtn = document.getElementById('createTaskBtn');
+
+    const editTaskContainer = document.getElementById('editTaskContainer');
+    const editTaskForm = document.getElementById('editTaskForm');
+    const editTaskIdInput = document.getElementById('editTaskId');
+    const editTaskTitleInput = document.getElementById('editTaskTitle');
+    const editTaskDescriptionInput = document.getElementById('editTaskDescription');
+    const editTaskDayInput = document.getElementById('editTaskDay');
+    const editTaskTimeInput = document.getElementById('editTaskTime');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+
+    let currentUser = null;
+    let currentDay = 'monday';
+    let tasks = [];
+
+    // 🔹 Firebase save token
+    const saveTokenToDatabase = async () => {
+      try {
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") {
+          const token = await messaging.getToken({ vapidKey });
+          console.log("FCM Token:", token);
+
+          const { data: { user } } = await supabase.auth.getUser();
+          if (!user) return;
+
+          const { error } = await supabase.from("push_tokens").upsert({
+            user_id: user.id,
+            token: token,
+          });
+          if (error) console.error("Error saving token:", error);
+        }
+      } catch (error) {
+        console.error("Error getting FCM token:", error);
+      }
+    };
+
+    // 🔹 Foreground push notifications
+    messaging.onMessage((payload) => {
+      console.log("Foreground message received:", payload);
+      const { title, body } = payload.notification;
+      showNotification(title + ": " + body, "success");
+    });
+
+    // --- Supabase Auth ---
+    async function handleLogin() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) return showNotification(error.message, 'error');
+      currentUser = data.user;
+      showNotification('Login successful!', 'success');
+      showApp();
+      saveTokenToDatabase();
+    }
+
+    async function handleRegister() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const { data, error } = await supabase.auth.signUp({ email, password });
+      if (error) return showNotification(error.message, 'error');
+      showNotification('Registration successful! Check your email.', 'success');
+    }
+
+    async function handleLogout() {
+      const { error } = await supabase.auth.signOut();
+      if (error) return showNotification(error.message, 'error');
+      showNotification('Logged out successfully', 'success');
+      window.location.reload();
+    }
+
+    function showApp() {
+      authContainer.style.display = 'none';
+      appContainer.style.display = 'block';
+      currentUserSpan.textContent = currentUser.email;
+      fetchAndRenderTasks();
+    }
+
+    // --- Task CRUD ---
+    async function handleCreateTask() {
+      const title = document.getElementById('taskTitle').value;
+      const description = document.getElementById('taskDescription').value;
+      const day = document.getElementById('taskDay').value;
+      const time = document.getElementById('taskTime').value;
+      if (!title || !time) return showNotification('Please fill all required fields', 'error');
+      const { error } = await supabase.from('tasks').insert([{
+        title, description, day, time, is_completed: false,
+        user_id: currentUser.id, user_email: currentUser.email
+      }]);
+      if (error) return showNotification(error.message, 'error');
+      showNotification('Task created!', 'success');
+      fetchAndRenderTasks();
+    }
+
+    async function handleEditTask(taskId) {
+      const { data: task, error } = await supabase.from('tasks').select('*').eq('id', taskId).single();
+      if (error) return showNotification(error.message, 'error');
+      editTaskIdInput.value = task.id;
+      editTaskTitleInput.value = task.title;
+      editTaskDescriptionInput.value = task.description;
+      editTaskDayInput.value = task.day;
+      editTaskTimeInput.value = task.time;
+      editTaskContainer.style.display = 'block';
+    }
+
+    async function handleUpdateTask(e) {
+      e.preventDefault();
+      const taskId = editTaskIdInput.value;
+      const { error } = await supabase.from('tasks').update({
+        title: editTaskTitleInput.value,
+        description: editTaskDescriptionInput.value,
+        day: editTaskDayInput.value,
+        time: editTaskTimeInput.value,
+      }).eq('id', taskId);
+      if (error) return showNotification(error.message, 'error');
+      showNotification('Task updated!', 'success');
+      editTaskContainer.style.display = 'none';
+      fetchAndRenderTasks();
+    }
+
+    async function deleteTask(taskId) {
+      if (!confirm("Delete this task?")) return;
+      const { error } = await supabase.from('tasks').delete().eq('id', taskId);
+      if (error) return showNotification(error.message, 'error');
+      showNotification('Task deleted!', 'success');
+      fetchAndRenderTasks();
+    }
+
+    async function toggleTaskCompletion(taskId, completed) {
+      const { error } = await supabase.from('tasks').update({
+        is_completed: completed,
+        completed_by: completed ? currentUser.email : null,
+        completed_at: completed ? new Date().toISOString() : null
+      }).eq('id', taskId);
+      if (error) return showNotification(error.message, 'error');
+      showNotification(completed ? "Task completed!" : "Task marked incomplete", "success");
+    }
+
+    function renderTasks() {
+      const dayTasks = tasks.filter(t => t.day === currentDay);
+      if (!dayTasks.length) {
+        taskList.innerHTML = "<p>No tasks for this day.</p>";
+        return;
+      }
+      taskList.innerHTML = "";
+      dayTasks.forEach(task => {
+        const div = document.createElement("div");
+        div.className = `task-card ${task.is_completed ? "completed" : ""}`;
+        div.innerHTML = `
+          <div>
+            <b>${task.title}</b> (${formatTime(task.time)})
+            <button class="edit-task" data-id="${task.id}">Edit</button>
+            <button class="delete-task" data-id="${task.id}">Delete</button>
+          </div>
+          <div>${task.description || ""}</div>
+          <label><input type="checkbox" ${task.is_completed ? "checked" : ""} id="task-${task.id}"> Completed</label>
+        `;
+        div.querySelector(`#task-${task.id}`).addEventListener("change", e => {
+          toggleTaskCompletion(task.id, e.target.checked);
+        });
+        div.querySelector(".edit-task").addEventListener("click", () => handleEditTask(task.id));
+        div.querySelector(".delete-task").addEventListener("click", () => deleteTask(task.id));
+        taskList.appendChild(div);
+      });
+    }
+
+    async function fetchAndRenderTasks() {
+      const { data, error } = await supabase.from('tasks').select('*');
+      if (error) return showNotification(error.message, 'error');
+      tasks = data;
+      renderTasks();
+    }
+
+    function checkReminders() {
+      const now = new Date();
+      const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+      const today = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'][now.getDay()];
+      tasks.forEach(task => {
+        if (task.day === today && task.time === currentTime && !task.is_completed) {
+          showNotification(`Reminder: ${task.title}`, "success");
+        }
+      });
+    }
+
+    function showNotification(message, type = 'success') {
+      const div = document.createElement("div");
+      div.className = `notification ${type}`;
+      div.textContent = message;
+      notificationArea.appendChild(div);
+      setTimeout(() => div.remove(), 5000);
+    }
+
+    function formatTime(t) {
+      if (!t) return "";
+      const [h, m] = t.split(":");
+      const hour = parseInt(h);
+      const ampm = hour >= 12 ? "PM" : "AM";
+      const formatted = hour % 12 || 12;
+      return `${formatted}:${m} ${ampm}`;
+    }
+
+    function capitalizeFirstLetter(s) {
+      return s.charAt(0).toUpperCase() + s.slice(1);
+    }
+
+    // Init
+    async function init() {
+      loginBtn.addEventListener("click", handleLogin);
+      showRegister.addEventListener("click", handleRegister);
+      logoutBtn.addEventListener("click", handleLogout);
+      createTaskBtn.addEventListener("click", handleCreateTask);
+      editTaskForm.addEventListener("submit", handleUpdateTask);
+      cancelEditBtn.addEventListener("click", () => { editTaskContainer.style.display = 'none'; });
+
+      dayButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          currentDay = btn.dataset.day;
+          currentDaySpan.textContent = capitalizeFirstLetter(currentDay);
+          fetchAndRenderTasks();
+        });
+      });
+
+      setInterval(checkReminders, 60000);
+
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        currentUser = user;
+        showApp();
+        saveTokenToDatabase();
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
